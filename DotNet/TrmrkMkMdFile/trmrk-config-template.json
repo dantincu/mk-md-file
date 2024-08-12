@@ -1,0 +1,13 @@
+{
+  "FullDirNameJoinStr": "-",
+  "MaxDirNameLength": 100,
+  "MdFileContentsTemplate": "# {0}  \n\n",
+  "TitleMacros": {
+    "|tc|": "$terms-and-concepts$",
+    "|a|": "$articles$",
+    "|ps|": "$products-and-services$",
+    "|p|": "$persons$",
+    "|pp|": "$public-persons$",
+    "|m|": "$misc$"
+  }
+}

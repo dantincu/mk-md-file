@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TrmrkMkMdFile": {
+      "commandName": "Project",
+      "commandLineArgs": ":wd:workDir 123 \"::asdfasfd? asdasd &asdfasd< asdfasdf> asdfasdf|asdfasd|asdfasdf|tc|qwerqwr\\\\//\""
+      // "commandLineArgs": ":wd:workDir :u:123-* qwerqwerqwre"
+      // "commandLineArgs": ":wd:workDir :u:123-*"
+    }
+  }
+}
