@@ -20,9 +20,6 @@ namespace TrmrkMkMdFile
         /// </summary>
         public static readonly string ExecutingAssemmblyPath = AppDomain.CurrentDomain.BaseDirectory;
 
-        public static ReadOnlyDictionary<TKey, TValue> RdnlD<TKey, TValue>(
-            this Dictionary<TKey, TValue> dictnr) => new ReadOnlyDictionary<TKey, TValue>(dictnr);
-
         /// <summary>
         /// Searches the provided enumerable for and returns the first item that satisfies the condition specified by the provided
         /// predicate or a default value of no suitable item is found.
@@ -58,18 +55,6 @@ namespace TrmrkMkMdFile
         }
 
         /// <summary>
-        /// Creates an array of the specified type with the specified items.
-        /// </summary>
-        /// <typeparam name="T">The type of array items</typeparam>
-        /// <param name="firstItem">The item that will sit on the first position of the array</param>
-        /// <param name="nextItemsArr">The rest of items that will fill the array</param>
-        /// <returns>An instance of type <see cref="{T}[]" /> containing the specified items.</returns>
-        public static T[] ToArr<T>(
-            this T firstItem,
-            params T[] nextItemsArr) => nextItemsArr.Prepend(
-                firstItem).ToArray();
-
-        /// <summary>
         /// Searches the provided enumerable for and returns the first item that satisfies the condition specified by the provided
         /// predicate or a default value of no suitable item is found.
         /// </summary>
@@ -86,51 +71,6 @@ namespace TrmrkMkMdFile
                 (item, idx) => predicate(item));
 
         /// <summary>
-        /// Retrieves the first item from the provided array (preceded by the first argument) that is not null.
-        /// </summary>
-        /// <typeparam name="T">The items type.</typeparam>
-        /// <param name="first">The first item to be checked against null.</param>
-        /// <param name="nextArr">The array containing the next items tobe checked against null.</param>
-        /// <returns>The first item from the provided array (preceded by the first argument) that is not null.</returns>
-        public static T FirstNotNull<T>(
-            this T first,
-            params T[] nextArr) => first ?? nextArr.FirstOrDefault(
-                item => item != null)!;
-
-        /// <summary>
-        /// Retrieves the first item from the provided array (preceded by the first argument) that is not equal to the type's default value.
-        /// </summary>
-        /// <typeparam name="T">The items type.</typeparam>
-        /// <param name="first">The first item to be checked against null.</param>
-        /// <param name="nextArr">The array containing the next items tobe checked against null.</param>
-        /// <param name="eqCompr">An optional equality comparer delegate.</param>
-        /// <returns>The first item from the provided array (preceded by the first argument) that is not equal to the type's default value.</returns>
-        public static T FirstNotDefault<T>(
-            this T first,
-            T[] nextArr,
-            Func<T, T, bool> eqCompr = null)
-        {
-            eqCompr ??= EqualityComparer<T>.Default.Equals;
-
-            T retVal = first;
-
-            if (eqCompr(retVal, default))
-            {
-                foreach (var item in nextArr)
-                {
-                    retVal = item;
-
-                    if (!eqCompr(retVal, default))
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return retVal;
-        }
-
-        /// <summary>
         /// Takes the input value, converts it to an output value using the provided output value factory and returns the output value.
         /// It's a convenience method for using the return value of a method or expression without explicitly assigning its
         /// value to a local variable in the parent scope. Results in shorter and more concise code,
@@ -144,24 +84,6 @@ namespace TrmrkMkMdFile
         public static TOut With<TIn, TOut>(
             this TIn inVal,
             Func<TIn, TOut> outValFactory) => outValFactory(inVal);
-
-        /// <summary>
-        /// Takes the input value, passes it to the provided action delegate, and then returns it to the caller.
-        /// It's a convenience method for using the return value of a method or expression without explicitly assigning its
-        /// value to a local variable in the parent scope. Results in shorter and more concise code,
-        /// but overuse might lead to ninja-code.
-        /// </summary>
-        /// <typeparam name="T">The input value type.</typeparam>
-        /// <param name="val">The provided input value.</param>
-        /// <param name="action">The provided action delegate.</param>
-        /// <returns>The input value.</returns>
-        public static T ActWith<T>(
-            this T val,
-            Action<T> action)
-        {
-            action(val);
-            return val;
-        }
 
         /// <summary>
         /// Returns the provided input string if it is not null or empty or the <c>null</c> value otherwise.
@@ -231,8 +153,6 @@ namespace TrmrkMkMdFile
         public static void ExecuteProgram(
             Action program)
         {
-            // Console.WriteLine();
-
             try
             {
                 program();
@@ -253,128 +173,6 @@ namespace TrmrkMkMdFile
                 Console.WriteLine(exc);
                 Console.ResetColor();
             }
-        }
-
-        /// <summary>
-        /// Returns the input string with the first letter changed to the uppercase variant if the provided was a lowercase variant.
-        /// </summary>
-        /// <param name="str">The input string.</param>
-        /// <returns>The input instance of type <see cref="string"/> having its first letter converted to
-        /// its uppercase variant</returns>
-        public static string CapitalizeFirstLetter(
-            this string str)
-        {
-            if (str.Any())
-            {
-                str = char.ToUpperInvariant(str[0]) + str[1..];
-            }
-
-            return str;
-        }
-
-        /// <summary>
-        /// Normalizes the provided path by combining it with the provided base path if the input path is not a rooted path.
-        /// Both input path and the base path are replace with the current working directory path if they are null.
-        /// </summary>
-        /// <param name="path">The provided input path.</param>
-        /// <param name="dfBasePath">The default base path for the input path.</param>
-        /// <returns>An instance of type <see cref="string" /> representing the normalizes path.</returns>
-        public static string NormalizePath(
-            this string? path,
-            string? dfBasePath = null)
-        {
-            path = path?.Trim().Nullify();
-            path ??= Directory.GetCurrentDirectory();
-
-            if (!Path.IsPathRooted(path))
-            {
-                dfBasePath ??= Directory.GetCurrentDirectory();
-                path = Path.Combine(dfBasePath, path);
-            }
-
-            return path;
-        }
-
-        /// <summary>
-        /// Converts the provided enumberable to an enumerable that is sorted by the provided property expression.
-        /// </summary>
-        /// <typeparam name="T">The type of the provided enumerable.</typeparam>
-        /// <typeparam name="TProp">The type of the provided sort expression property</typeparam>
-        /// <param name="nmrbl">The provided enumerable</param>
-        /// <param name="orderByExpr">The provided property expression</param>
-        /// <param name="useAscendingSortOrder">A boolean value indicating whether the returned enumerable
-        /// should be sorted with ascending or descending order</param>
-        /// <returns>The ordered enumerable</returns>
-        public static IEnumerable<T> OrderByExpr<T, TProp>(
-            this IEnumerable<T> nmrbl,
-            Func<T, TProp> orderByExpr,
-            bool useAscendingSortOrder)
-        {
-            if (useAscendingSortOrder)
-            {
-                nmrbl = nmrbl.OrderBy(orderByExpr);
-            }
-            else
-            {
-                nmrbl = nmrbl.OrderByDescending(orderByExpr);
-            }
-
-            return nmrbl;
-        }
-
-        /// <summary>
-        /// Gets an array containing the specified file system entries.
-        /// </summary>
-        /// <param name="dirPath">The folder path from where to get the entries</param>
-        /// <param name="getFolders">A nullable boolean flag indicating whether to get only folders, only files or all entries.</param>
-        /// <returns></returns>
-        public static string[] GetFsEntries(
-            string dirPath,
-            bool? getFolders = null) => getFolders switch
-            {
-                true => Directory.GetDirectories(dirPath),
-                false => Directory.GetFiles(dirPath),
-                _ => Directory.GetFileSystemEntries(dirPath)
-            };
-
-        /// <summary>
-        /// Gets the file system entries from the provided dir path and converts them to instances of type <see cref="FsEntry" />.
-        /// </summary>
-        /// <param name="dirPath">The folder path from where to get the entries</param>
-        /// <returns>A list containing the converted file system entries.</returns>
-        public static FsEntry[] GetFileSystemEntries(
-            string dirPath)
-        {
-            var fsEntriesList = new List<FsEntry>();
-
-            AddFileSystemEntries(fsEntriesList, dirPath, true);
-            AddFileSystemEntries(fsEntriesList, dirPath, false);
-
-            return fsEntriesList.ToArray();
-        }
-
-        /// <summary>
-        /// Gets the file system entries from the provided dir path, converts them to instances of type <see cref="FsEntry" />
-        /// and adds them to the provided list.
-        /// </summary>
-        /// <param name="fsEntriesList">The list of converted file system entries.</param>
-        /// <param name="dirPath">The folder path from where to get the entries</param>
-        /// <param name="addFolders">A nullable boolean flag indicating whether to get only folders, only files or all entries.</param>
-        public static void AddFileSystemEntries(
-            List<FsEntry> fsEntriesList,
-            string dirPath,
-            bool? addFolders)
-        {
-            var fsEntriesArr = GetFsEntries(
-                dirPath, addFolders).Select(
-                    fsEntry => new FsEntry
-                    {
-                        FullPath = fsEntry,
-                        Name = Path.GetFileName(fsEntry),
-                        IsFolder = addFolders
-                    });
-
-            fsEntriesList.AddRange(fsEntriesArr);
         }
     }
 }
