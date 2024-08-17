@@ -164,6 +164,11 @@ namespace TrmrkMkMdFile
             File.WriteAllText(
                 mdFilePath,
                 mdFileContents);
+
+            if (pgArgs.OpenMdFile)
+            {
+                UtilsH.OpenWithDefaultProgramIfNotNull(mdFilePath);
+            }
         }
 
         /// <summary>

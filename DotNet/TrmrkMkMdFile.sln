@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrmrkMkMdFile", "TrmrkMkMdFile.csproj", "{0B5DB8E2-F391-40C1-8529-5FECA5FB7B82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrmrkMkMdFile", "TrmrkMkMdFile\TrmrkMkMdFile.csproj", "{0B5DB8E2-F391-40C1-8529-5FECA5FB7B82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
